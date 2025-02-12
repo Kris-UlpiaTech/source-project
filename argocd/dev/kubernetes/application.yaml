@@ -18,7 +18,7 @@ spec:
   project: default
 
   # Source of the application manifests
-  ssource:
+  source:
     repoURL: https://github.com/Kris-UlpiaTech/source-project.git
     targetRevision: HEAD
     path: snowflake-sql
