@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: snowflake-sql
+  namespace: snowflake-sql
+spec:
+  selector:
+    matchLabels:
+      job: snowflake-sql
+  template:
+    metadata:
+      labels:
+        job: snowflake-sql
+    spec:
+      containers:
+      - image: snowflake-sql:latest
+        name: snowflake-sql
+        command: ["python", "script.py", "--config-file", "/app/config.txt", "--env", "QA", "--schema", "public"]
+        ports:
+        - containerPort: 80
+      restartPolicy: Never

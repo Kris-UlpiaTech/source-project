@@ -1,0 +1,10 @@
+# Example Kubernetes ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snowflake-sql-config
+  namespace: snowflake-sql
+data:
+  snowflakeAuthType: Basic
+  snowflakeRole: "ACCOUNTADMIN"
+  snowflakeWarehouse: "COMPUTE_WH"
