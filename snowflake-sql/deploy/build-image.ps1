@@ -1,6 +1,6 @@
 # Define variables
-$dockerUser = "your-dockerhub-username"
-$imageName = "snowflake-image"
+$dockerUser = "krizzon"
+$imageName = "snowsql-call"
 $tag = "latest"
 
 # Log in to Docker Hub

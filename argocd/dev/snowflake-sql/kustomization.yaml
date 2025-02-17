@@ -1,0 +1,3 @@
+resources:
+- config-map.yaml
+- secret.yaml

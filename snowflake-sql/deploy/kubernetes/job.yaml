@@ -4,43 +4,24 @@ metadata:
   name: snowflake-sql
   namespace: snowflake-sql
 spec:
-  selector:
-    matchLabels:
-      job: snowflake-sql
   template:
     metadata:
       labels:
         job: snowflake-sql
     spec:
       containers:
-      - image: snowflake-sql:latest
-        name: snowflake-sql
-        command: ["python", "script.py", "--config-file", "/tmp/config.txt", "--secret-file", "/tmp/secrets.txt"]
+      - image: krizzon/snowsql-call:latest
+        name: snowsql-call
+        command: ["python", "snowsql-call.py", "--config-file", "/tmp/config.txt", "--secret-file", "/tmp/secrets.txt"]
         ports:
         - containerPort: 80
-        env:
-        - name: SNOWFLAKE_ACCOUNT
-          valueFrom:
-            secretKeyRef:
-              name: snowflake-sql-secrets
-              key: snowflakeAccount
-        - name: SNOWFLAKE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: snowflake-sql-secrets
-              key: snowflakePassword
-        - name: SNOWFLAKE_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: snowflake-sql-secrets
-              key: snowflakeUsername
         volumeMounts:
         - name: config-volume
           mountPath: /tmp/config.txt
           subPath: config.txt
         - name: secret-volume
           mountPath: /tmp/secrets.txt
-          readoly: true
+          readOnly: true
       restartPolicy: Never
       volumes:
       - name: config-volume
