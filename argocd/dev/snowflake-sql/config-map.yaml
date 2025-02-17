@@ -8,3 +8,5 @@ data:
   snowflakeAuthType: Basic
   snowflakeRole: "ACCOUNTADMIN"
   snowflakeWarehouse: "COMPUTE_WH"
+  snowflakeSchema: "ARGO"
+  snowflakeDatabase: "ARGODEV"

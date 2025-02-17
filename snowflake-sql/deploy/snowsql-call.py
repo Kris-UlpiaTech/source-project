@@ -2,27 +2,15 @@ import argparse
 import snowflake.connector
 import sys
 
-def parse_config_file(file_path: str, env: str) -> dict:
+def parse_config_file(file_path: str) -> dict:
     config = {}
-    in_section = False
-    section_header = f"[{env}]"
 
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
 
-            # If we encounter a bracketed line like [UAT] or [DEV], check if it's our env
-            if line.startswith('[') and line.endswith(']'):
-                if line == section_header:
-                    in_section = True  # Start capturing
-                else:
-                    in_section = False  # We've hit a different section, stop capturing
-                continue
-
-            # If we're in the right section, capture key=value lines
-            if in_section and '=' in line and not line.startswith('#'):
-                key, value = line.split('=', 1)
-                config[key.strip()] = value.strip()
+            key, value = line.split('=', 1)
+            config[key.strip()] = value.strip()
 
     return config
 
@@ -31,19 +19,21 @@ def main():
         description="Parse config.txt for a specific environment section (e.g., [UAT])"
     )
     parser.add_argument("--config-file", required=True, help="Path to your config.txt")
-    parser.add_argument("--env", help="Which environment section to parse. Choose between QA | UAT | PROD.")
-    parser.add_argument("--schema", help="Which schema.")
+    parser.add_argument("--secret-file", required=True, help="Path to your secrets.txt")
     args = parser.parse_args()
 
     # Read credentials from config file
-    config = parse_config_file(args.config_file, args.env)
+    config = parse_config_file(args.config_file)
+    secret = parse_config_file(args.secret_file)
 
     # Extract required fields
-    account    = config.get('snowflakeAccount')
-    username   = config.get('snowflakeUsername')
-    password   = config.get('snowflakePassword')
+    account    = secret.get('snowflakeAccount')
+    username   = secret.get('snowflakeUsername')
+    password   = secret.get('snowflakePassword')
     role       = config.get('snowflakeRole')
     warehouse  = config.get('snowflakeWarehouse')
+    database   = config.get("snowflakeDatabase")
+    schema     = config.get("snowflakeSchema")
 
     # Validate they exist
     if not all([account, username, password, role, warehouse]):
@@ -57,8 +47,8 @@ def main():
             password  = password,
             role      = role,
             warehouse = warehouse,
-            database  = args.env,
-            schema    = args.schema
+            database  = database,
+            schema    = schema
         )
         print("Successfully connected to Snowflake.")
 
