@@ -12,7 +12,7 @@ spec:
       containers:
       - image: krizzon/snowsql-call:latest
         name: snowsql-call
-        command: ["python", "snowsql-call.py", "--config-file", "/tmp/config.txt", "--secret-file", "/tmp/secrets.txt"]
+        command: ["python", "main.py", "--config-file", "/tmp/config.txt", "--secret-file", "/tmp/secrets.txt"]
         ports:
         - containerPort: 80
         volumeMounts:

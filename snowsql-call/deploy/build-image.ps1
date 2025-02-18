@@ -11,9 +11,10 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Build the Docker image
+# Build the Docker image using the Dockerfile from the parent directory
+# and set the build context to the parent folder (..)
 Write-Host "Building the Docker image..."
-docker build -t "${dockerUser}/${imageName}:${tag}" .
+docker build -f "../Dockerfile" -t "${dockerUser}/${imageName}:${tag}" ..
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Docker build failed"
     exit 1

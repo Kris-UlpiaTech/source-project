@@ -1,7 +1,0 @@
-[QA]
-snowflakeAuthType=Basic
-snowflakeAccount=nf37892.central-us.azure
-snowflakePassword=106Oy><pChQ.gI
-snowflakeRole=QA_CATALYST_SVC_ROLE
-snowflakeUsername=QA_CATALYST_SVC_USER
-snowflakeWarehouse=CATALYST_WH

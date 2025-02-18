@@ -2,6 +2,23 @@ import argparse
 import snowflake.connector
 import sys
 
+def is_valid_value(val: str) -> bool:
+    """
+    Returns True if val is not None, not empty, not just whitespace,
+    and not one of the common placeholders like 'null' or 'none' (case-insensitive).
+    """
+    if val is None:
+        return False
+
+    stripped_val = val.strip()
+    if not stripped_val:
+        return False
+
+    if stripped_val.lower() in ("null", "none"):
+        return False
+    
+    return True
+
 def parse_config_file(file_path: str) -> dict:
     config = {}
 
@@ -35,9 +52,17 @@ def main():
     database   = config.get("snowflakeDatabase")
     schema     = config.get("snowflakeSchema")
 
-    # Validate they exist
-    if not all([account, username, password, role, warehouse]):
-        sys.exit("Error: Missing one or more Snowflake configuration values in config.txt")
+    # Validate secret file fields
+    if not all(is_valid_value(x) for x in [account, username, password]):
+        print("Error: Missing or invalid Snowflake configuration values in secret.txt")
+        sys.exit(1)
+        return  # <-- ensures no further code runs in tests
+
+    # Validate config file fields
+    if not all(is_valid_value(x) for x in [role, warehouse, database, schema]):
+        print("Error: Missing or invalid Snowflake configuration values in config.txt")
+        sys.exit(1)
+        return  # <-- ensures no further code runs in tests
 
     # Connect to Snowflake
     try:
@@ -67,6 +92,3 @@ def main():
     finally:
         if 'conn' in locals() and conn:
             conn.close()
-
-if __name__ == "__main__":
-    main()
